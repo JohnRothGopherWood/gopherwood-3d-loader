@@ -1,1 +1,374 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GopherWood 3D Trailer Loading System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        #controls {
+            width: 350px;
+            background: #f0f0f0;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        #scene-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .control-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        
+        .stats {
+            background: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .stat-line {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <h2>🚛 GopherWood 3D Loader</h2>
+        
+        <div class="control-group">
+            <h3>Trailer</h3>
+            <button onclick="setTrailerSize(48)">48' Trailer</button>
+            <button onclick="setTrailerSize(53)">53' Trailer</button>
+        </div>
+        
+        <div class="control-group">
+            <h3>Load Bundles</h3>
+            <select id="productType">
+                <option value="pickets">6' Dogear Pickets (1,400 lbs)</option>
+                <option value="4x4">4x4x8 Rough (816 lbs)</option>
+                <option value="2x4">2x4x8 Rough (918 lbs)</option>
+            </select>
+            <input type="number" id="bundleCount" value="1" min="1" max="50">
+            <button onclick="loadBundles()">Load Bundles</button>
+            <button onclick="clearAll()">Clear Trailer</button>
+        </div>
+        
+        <div class="control-group">
+            <h3>Statistics</h3>
+            <div class="stats">
+                <div class="stat-line">
+                    <span>Total Weight:</span>
+                    <span id="totalWeight">0 lbs</span>
+                </div>
+                <div class="stat-line">
+                    <span>Bundle Count:</span>
+                    <span id="bundleCount2">0</span>
+                </div>
+                <div class="stat-line">
+                    <span>Trailer Size:</span>
+                    <span id="trailerSize">53'</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="scene-container"></div>
+    
+    <script>
+        // Global variables
+        let scene, camera, renderer;
+        let trailer = null;
+        let bundles = [];
+        let trailerLength = 53;
+        let totalWeight = 0;
+        
+        // Initialize Three.js
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB);
+            
+            // Create camera
+            const aspect = window.innerWidth / window.innerHeight;
+            camera = new THREE.PerspectiveCamera(60, aspect, 0.1, 1000);
+            camera.position.set(60, 40, 60);
+            camera.lookAt(0, 0, 0);
+            
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            const container = document.getElementById('scene-container');
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4);
+            directionalLight.position.set(50, 50, 50);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+            
+            // Create ground (asphalt)
+            const groundGeometry = new THREE.PlaneGeometry(200, 200);
+            const groundMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -0.1;
+            ground.receiveShadow = true;
+            scene.add(ground);
+            
+            // Create initial trailer
+            createTrailer();
+            
+            // Add mouse controls
+            setupControls();
+            
+            // Start animation
+            animate();
+            
+            console.log("Three.js initialized successfully");
+        }
+        
+        // Create trailer
+        function createTrailer() {
+            // Remove old trailer if exists
+            if (trailer) {
+                scene.remove(trailer);
+            }
+            
+            trailer = new THREE.Group();
+            
+            // Trailer deck (aluminum)
+            const deckGeometry = new THREE.BoxGeometry(trailerLength, 1, 8.5);
+            const deckMaterial = new THREE.MeshLambertMaterial({ color: 0xC0C0C0 });
+            const deck = new THREE.Mesh(deckGeometry, deckMaterial);
+            deck.position.y = 0.5;
+            deck.castShadow = true;
+            deck.receiveShadow = true;
+            trailer.add(deck);
+            
+            // Add stake pockets
+            const pocketGeometry = new THREE.BoxGeometry(0.5, 1, 0.5);
+            const pocketMaterial = new THREE.MeshLambertMaterial({ color: 0x444444 });
+            
+            for (let i = -trailerLength/2 + 4; i < trailerLength/2; i += 8) {
+                // Left side pockets
+                const leftPocket = new THREE.Mesh(pocketGeometry, pocketMaterial);
+                leftPocket.position.set(i, 1, -4);
+                trailer.add(leftPocket);
+                
+                // Right side pockets
+                const rightPocket = new THREE.Mesh(pocketGeometry, pocketMaterial);
+                rightPocket.position.set(i, 1, 4);
+                trailer.add(rightPocket);
+            }
+            
+            // DOT bumper
+            const bumperGeometry = new THREE.BoxGeometry(9, 1, 0.5);
+            const bumperMaterial = new THREE.MeshLambertMaterial({ color: 0xFF0000 });
+            const bumper = new THREE.Mesh(bumperGeometry, bumperMaterial);
+            bumper.position.set(trailerLength/2 + 0.5, 0.5, 0);
+            trailer.add(bumper);
+            
+            scene.add(trailer);
+            console.log(`Created ${trailerLength}' trailer`);
+        }
+        
+        // Load bundles function
+        function loadBundles() {
+            const type = document.getElementById('productType').value;
+            const count = parseInt(document.getElementById('bundleCount').value);
+            
+            for (let i = 0; i < count; i++) {
+                const bundle = createBundle(type);
+                if (bundle) {
+                    const position = calculatePosition(i);
+                    bundle.position.set(position.x, position.y, position.z);
+                    trailer.add(bundle);
+                    bundles.push(bundle);
+                    
+                    // Update weight
+                    if (type === 'pickets') totalWeight += 1400;
+                    else if (type === '4x4') totalWeight += 816;
+                    else if (type === '2x4') totalWeight += 918;
+                }
+            }
+            
+            updateStats();
+        }
+        
+        // Create bundle mesh
+        function createBundle(type) {
+            let geometry, material;
+            
+            if (type === 'pickets') {
+                geometry = new THREE.BoxGeometry(6, 3.9, 3.9);
+            } else if (type === '4x4') {
+                geometry = new THREE.BoxGeometry(8, 2, 2);
+            } else {
+                geometry = new THREE.BoxGeometry(8, 2, 2.5);
+            }
+            
+            // White wrapped bundle
+            material = new THREE.MeshLambertMaterial({ color: 0xFFF8DC });
+            const bundle = new THREE.Mesh(geometry, material);
+            bundle.castShadow = true;
+            bundle.receiveShadow = true;
+            
+            // Add red strapping
+            const strapGeometry = new THREE.BoxGeometry(0.1, geometry.parameters.height + 0.1, geometry.parameters.depth + 0.1);
+            const strapMaterial = new THREE.MeshLambertMaterial({ color: 0xFF0000 });
+            
+            const strap1 = new THREE.Mesh(strapGeometry, strapMaterial);
+            strap1.position.x = -geometry.parameters.width/3;
+            bundle.add(strap1);
+            
+            const strap2 = new THREE.Mesh(strapGeometry, strapMaterial);
+            strap2.position.x = geometry.parameters.width/3;
+            bundle.add(strap2);
+            
+            return bundle;
+        }
+        
+        // Calculate position for bundles
+        function calculatePosition(index) {
+            const row = Math.floor(index / 4);
+            const pos = index % 4;
+            const side = pos % 2;
+            const stack = Math.floor(pos / 2);
+            
+            return {
+                x: -trailerLength/2 + 5 + (row * 7),
+                y: 2 + (stack * 4),
+                z: side === 0 ? -2 : 2
+            };
+        }
+        
+        // Clear all bundles
+        function clearAll() {
+            bundles.forEach(bundle => {
+                trailer.remove(bundle);
+            });
+            bundles = [];
+            totalWeight = 0;
+            updateStats();
+        }
+        
+        // Set trailer size
+        function setTrailerSize(size) {
+            trailerLength = size;
+            clearAll();
+            createTrailer();
+            document.getElementById('trailerSize').textContent = size + "'";
+        }
+        
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalWeight').textContent = totalWeight + ' lbs';
+            document.getElementById('bundleCount2').textContent = bundles.length;
+        }
+        
+        // Setup mouse controls
+        function setupControls() {
+            let mouseDown = false;
+            let mouseX = 0;
+            let mouseY = 0;
+            
+            document.addEventListener('mousedown', (e) => {
+                mouseDown = true;
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!mouseDown) return;
+                
+                const deltaX = e.clientX - mouseX;
+                const deltaY = e.clientY - mouseY;
+                
+                const rotation = trailer.rotation.y + deltaX * 0.01;
+                trailer.rotation.y = rotation;
+                
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            document.addEventListener('mouseup', () => {
+                mouseDown = false;
+            });
+            
+            document.addEventListener('wheel', (e) => {
+                const scale = camera.position.length();
+                const newScale = scale + e.deltaY * 0.05;
+                if (newScale > 20 && newScale < 200) {
+                    camera.position.multiplyScalar(newScale / scale);
+                }
+            });
+        }
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            camera.lookAt(0, 0, 0);
+            renderer.render(scene, camera);
+        }
+        
+        // Window resize handler
+        window.addEventListener('resize', () => {
+            const container = document.getElementById('scene-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+        
+        // Start the application
+        window.onload = init;
+    </script>
+</body>
+</html>
