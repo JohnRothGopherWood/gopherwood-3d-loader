@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="en"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;GopherWood 3D Trailer Loading System&lt;/title&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"&gt;&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>body {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-family: Arial, sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>height: 100vh;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>overflow: hidden;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>#controls {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 350px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #f0f0f0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 20px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>overflow-y: auto;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>box-shadow: 2px 0 5px rgba(0,0,0,0.1);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>#scene-container {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>flex: 1;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>position: relative;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>h2 {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-top: 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #333;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.control-group {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 20px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 15px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: white;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 5px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.control-group h3 {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-top: 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #555;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>button {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 100%;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 10px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 5px 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #4CAF50;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: white;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 3px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>cursor: pointer;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>button:hover {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #45a049;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>select, input {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 100%;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 8px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 5px 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: 1px solid #ddd;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 3px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.stats {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #fff;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 10px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 5px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.stat-line {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>justify-content: space-between;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 5px 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="controls"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;h2&gt;🚛 GopherWood 3D Loader&lt;/h2&gt;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="control-group"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h3&gt;Trailer&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;button onclick="setTrailerSize(48)"&gt;48' Trailer&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;button onclick="setTrailerSize(53)"&gt;53' Trailer&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="control-group"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h3&gt;Load Bundles&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;select id="productType"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;option value="pickets"&gt;6' Dogear Pickets (1,400 lbs)&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;option value="4x4"&gt;4x4x8 Rough (816 lbs)&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;option value="2x4"&gt;2x4x8 Rough (918 lbs)&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/select&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;input type="number" id="bundleCount" value="1" min="1" max="50"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;button onclick="loadBundles()"&gt;Load Bundles&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;button onclick="clearAll()"&gt;Clear Trailer&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="control-group"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h3&gt;Statistics&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="stats"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="stat-line"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Total Weight:&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span id="totalWeight"&gt;0 lbs&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="stat-line"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Bundle Count:&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span id="bundleCount2"&gt;0&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="stat-line"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Trailer Size:&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span id="trailerSize"&gt;53'&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="scene-container"&gt;&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Global variables</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let scene, camera, renderer;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let trailer = null;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let bundles = [];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let trailerLength = 53;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let totalWeight = 0;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Initialize Three.js</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function init() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Create scene</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>scene = new THREE.Scene();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>scene.background = new THREE.Color(0x87CEEB);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Create camera</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const aspect = window.innerWidth / window.innerHeight;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>camera = new THREE.PerspectiveCamera(60, aspect, 0.1, 1000);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>camera.position.set(60, 40, 60);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>camera.lookAt(0, 0, 0);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Create renderer</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>renderer = new THREE.WebGLRenderer({ antialias: true });</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const container = document.getElementById('scene-container');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>renderer.setSize(container.clientWidth, container.clientHeight);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>renderer.shadowMap.enabled = true;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>container.appendChild(renderer.domElement);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Add lights</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>scene.add(ambientLight);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>directionalLight.position.set(50, 50, 50);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>directionalLight.castShadow = true;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>scene.add(directionalLight);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Create ground (asphalt)</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const groundGeometry = new THREE.PlaneGeometry(200, 200);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const groundMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const ground = new THREE.Mesh(groundGeometry, groundMaterial);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>ground.rotation.x = -Math.PI / 2;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>ground.position.y = -0.1;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>ground.receiveShadow = true;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>scene.add(ground);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Create initial trailer</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>createTrailer();</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Add mouse controls</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>setupControls();</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Start animation</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>animate();</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>console.log("Three.js initialized successfully");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Create trailer</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function createTrailer() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Remove old trailer if exists</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (trailer) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>scene.remove(trailer);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>trailer = new THREE.Group();</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Trailer deck (aluminum)</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const deckGeometry = new THREE.BoxGeometry(trailerLength, 1, 8.5);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const deckMaterial = new THREE.MeshLambertMaterial({ color: 0xC0C0C0 });</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const deck = new THREE.Mesh(deckGeometry, deckMaterial);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>deck.position.y = 0.5;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>deck.castShadow = true;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>deck.receiveShadow = true;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>trailer.add(deck);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Add stake pockets</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const pocketGeometry = new THREE.BoxGeometry(0.5, 1, 0.5);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const pocketMaterial = new THREE.MeshLambertMaterial({ color: 0x444444 });</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>for (let i = -trailerLength/2 + 4; i &lt; trailerLength/2; i += 8) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// Left side pockets</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const leftPocket = new THREE.Mesh(pocketGeometry, pocketMaterial);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>leftPocket.position.set(i, 1, -4);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>trailer.add(leftPocket);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// Right side pockets</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const rightPocket = new THREE.Mesh(pocketGeometry, pocketMaterial);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>rightPocket.position.set(i, 1, 4);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>trailer.add(rightPocket);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// DOT bumper</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const bumperGeometry = new THREE.BoxGeometry(9, 1, 0.5);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const bumperMaterial = new THREE.MeshLambertMaterial({ color: 0xFF0000 });</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const bumper = new THREE.Mesh(bumperGeometry, bumperMaterial);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>bumper.position.set(trailerLength/2 + 0.5, 0.5, 0);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>trailer.add(bumper);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>scene.add(trailer);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>console.log(`Created ${trailerLength}' trailer`);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Load bundles</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function loadBundles() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const type = document.getElementById('productType').value;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const count = parseInt(document.getElementById('bundleCount').value);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>for (let i = 0; i &lt; count; i++) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const bundle = createBundle(type);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (bundle) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const position = calculatePosition(i);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>bundle.position.set(position.x, position.y, position.z);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>trailer.add(bundle);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>bundles.push(bundle);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">                    </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>// Update weight</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>if (type === 'pickets') totalWeight += 1400;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>else if (type === '4x4') totalWeight += 816;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>else if (type === '2x4') totalWeight += 918;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>updateStats();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Create bundle mesh</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function createBundle(type) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let geometry, material;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (type === 'pickets') {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>geometry = new THREE.BoxGeometry(6, 3.9, 3.9);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>} else if (type === '4x4') {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>geometry = new THREE.BoxGeometry(8, 2, 2);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>} else {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>geometry = new THREE.BoxGeometry(8, 2, 2.5);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// White wrapped bundle</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>material = new THREE.MeshLambertMaterial({ color: 0xFFF8DC });</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const bundle = new THREE.Mesh(geometry, material);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>bundle.castShadow = true;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>bundle.receiveShadow = true;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Add red strapping</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const strapGeometry = new THREE.BoxGeometry(0.1, geometry.parameters.height + 0.1, geometry.parameters.depth + 0.1);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const strapMaterial = new THREE.MeshLambertMaterial({ color: 0xFF0000 });</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const strap1 = new THREE.Mesh(strapGeometry, strapMaterial);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>strap1.position.x = -geometry.parameters.width/3;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>bundle.add(strap1);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const strap2 = new THREE.Mesh(strapGeometry, strapMaterial);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>strap2.position.x = geometry.parameters.width/3;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>bundle.add(strap2);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>return bundle;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Calculate position for bundles</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function calculatePosition(index) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const row = Math.floor(index / 4);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const pos = index % 4;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const side = pos % 2;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const stack = Math.floor(pos / 2);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>return {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>x: -trailerLength/2 + 5 + (row * 7),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>y: 2 + (stack * 4),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>z: side === 0 ? -2 : 2</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>};</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Clear all bundles</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function clearAll() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>bundles.forEach(bundle =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>trailer.remove(bundle);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>bundles = [];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>totalWeight = 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>updateStats();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Set trailer size</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function setTrailerSize(size) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>trailerLength = size;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>clearAll();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>createTrailer();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('trailerSize').textContent = size + "'";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Update statistics</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function updateStats() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('totalWeight').textContent = totalWeight + ' lbs';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('bundleCount2').textContent = bundles.length;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Setup mouse controls</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function setupControls() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let mouseDown = false;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let mouseX = 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let mouseY = 0;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.addEventListener('mousedown', (e) =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>mouseDown = true;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>mouseX = e.clientX;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>mouseY = e.clientY;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.addEventListener('mousemove', (e) =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (!mouseDown) return;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const deltaX = e.clientX - mouseX;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const deltaY = e.clientY - mouseY;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const rotation = trailer.rotation.y + deltaX * 0.01;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>trailer.rotation.y = rotation;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>mouseX = e.clientX;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>mouseY = e.clientY;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.addEventListener('mouseup', () =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>mouseDown = false;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.addEventListener('wheel', (e) =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const scale = camera.position.length();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const newScale = scale + e.deltaY * 0.05;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (newScale &gt; 20 &amp;&amp; newScale &lt; 200) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>camera.position.multiplyScalar(newScale / scale);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Animation loop</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function animate() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>requestAnimationFrame(animate);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>camera.lookAt(0, 0, 0);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>renderer.render(scene, camera);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Window resize handler</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>window.addEventListener('resize', () =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const container = document.getElementById('scene-container');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>camera.aspect = container.clientWidth / container.clientHeight;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>camera.updateProjectionMatrix();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>renderer.setSize(container.clientWidth, container.clientHeight);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Start the application</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>window.onload = init;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+</body>
+</html>
