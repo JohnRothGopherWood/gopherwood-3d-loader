@@ -3,149 +3,355 @@
 <head>
     <title>GopherWood Sales Arsenal</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;500;700&display=swap');
+        
         body {
-            font-family: Georgia, serif;
-            background: linear-gradient(135deg, #8B4513 0%, #2F1B14 100%);
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1a0f08 0%, #2c1810 50%, #1a0f08 100%);
             margin: 0;
             padding: 0;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            overflow-x: hidden;
         }
+        
+        /* Wood grain texture overlay */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 2px,
+                rgba(212, 165, 116, 0.03) 2px,
+                rgba(212, 165, 116, 0.03) 4px
+            );
+            pointer-events: none;
+        }
+        
         .container {
-            max-width: 900px;
+            max-width: 1100px;
+            width: 90%;
             margin: 0 auto;
-            background: #FFF8DC;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #f5f5f0 0%, #e8e8e0 100%);
+            border-radius: 0;
+            padding: 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
         }
+        
         .header {
+            background: linear-gradient(135deg, #6b4423 0%, #4a2c1a 100%);
             text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 3px solid #8B4513;
-            padding-bottom: 20px;
+            padding: 50px 20px;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(212, 165, 116, 0.1) 10px,
+                rgba(212, 165, 116, 0.1) 20px
+            );
+        }
+        
         h1 {
-            color: #8B4513;
-            font-size: 2.5em;
+            font-family: 'Bebas Neue', sans-serif;
+            color: white;
+            font-size: 56px;
             margin: 0;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+            position: relative;
         }
+        
+        .logo-text {
+            display: inline-block;
+            padding: 0 20px;
+            position: relative;
+        }
+        
+        .logo-text::before,
+        .logo-text::after {
+            content: '🌲';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 40px;
+        }
+        
+        .logo-text::before {
+            left: -30px;
+        }
+        
+        .logo-text::after {
+            right: -30px;
+        }
+        
         .subtitle {
-            color: #654321;
-            font-size: 1.2em;
-            margin-top: 10px;
+            color: #d4a574;
+            font-size: 18px;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 500;
+            position: relative;
         }
+        
+        .tagline {
+            background: rgba(212, 165, 116, 0.2);
+            border-top: 2px solid #d4a574;
+            border-bottom: 2px solid #d4a574;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .tagline-text {
+            color: white;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+        
+        .content-area {
+            padding: 40px;
+        }
+        
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
-            margin-top: 30px;
         }
+        
         .tool-card {
-            background: rgba(144, 238, 144, 0.2);
-            border: 3px solid #228B22;
-            border-radius: 15px;
-            padding: 25px;
+            background: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 35px;
             text-align: center;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #d4a574 0%, #8b6331 50%, #d4a574 100%);
+        }
+        
         .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(34, 139, 34, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
         }
+        
         .tool-icon {
-            font-size: 3em;
-            margin-bottom: 15px;
-        }
-        .tool-title {
-            color: #228B22;
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .tool-description {
-            color: #654321;
+            font-size: 48px;
             margin-bottom: 20px;
-            line-height: 1.6;
+            display: inline-block;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(107, 68, 35, 0.1) 100%);
+            border-radius: 50%;
         }
+        
+        .tool-title {
+            font-family: 'Bebas Neue', sans-serif;
+            color: #2c1810;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .tool-description {
+            color: #4a2c1a;
+            margin-bottom: 25px;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+        
         .tool-button {
             display: inline-block;
-            padding: 12px 30px;
-            background: #228B22;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #6b4423 0%, #4a2c1a 100%);
             color: white;
             text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: background 0.3s;
+            border-radius: 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
         }
+        
+        .tool-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
         .tool-button:hover {
-            background: #1F6B1F;
+            background: linear-gradient(135deg, #8b6331 0%, #6b4423 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
         }
+        
+        .tool-button:hover::before {
+            left: 100%;
+        }
+        
         .footer {
+            background: linear-gradient(135deg, #2c1810 0%, #1a0f08 100%);
             text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 2px solid #8B4513;
-            color: #654321;
+            padding: 40px 20px;
+            color: #d4a574;
+            border-top: 4px solid #d4a574;
         }
+        
+        .footer strong {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 24px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .footer-info {
+            font-size: 14px;
+            line-height: 1.8;
+            margin-top: 10px;
+        }
+        
         .status-badge {
             display: inline-block;
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-size: 0.8em;
+            padding: 4px 12px;
+            border-radius: 0;
+            font-size: 11px;
             margin-left: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
+        
         .status-ready {
-            background: #28a745;
+            background: linear-gradient(135deg, #2d5f3f 0%, #1a3a26 100%);
             color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
+        
         .status-beta {
-            background: #ffc107;
-            color: black;
+            background: linear-gradient(135deg, #d4a574 0%, #8b6331 100%);
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        /* Professional touch */
+        .quality-seal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background: #d4a574;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            font-family: 'Bebas Neue', sans-serif;
+            color: #2c1810;
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transform: rotate(15deg);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🌲 GopherWood Sales Arsenal 🌲</h1>
-            <div class="subtitle">Elite Tools for the Professional Wood Care Gunslinger</div>
+            <div class="quality-seal">
+                Premium<br>Quality<br>Since<br>2012
+            </div>
+            <h1><span class="logo-text">GopherWood Sales Arsenal</span></h1>
+            <div class="subtitle">Factory-Finished Lumber Excellence</div>
+            <div class="tagline">
+                <div class="tagline-text">Built for the Pros Who Don't Cut Corners</div>
+            </div>
         </div>
 
-        <div class="tools-grid">
-            <!-- Truckload Calculator -->
-            <div class="tool-card">
-                <div class="tool-icon">📊</div>
-                <div class="tool-title">
-                    Truckload Calculator
-                    <span class="status-badge status-ready">READY</span>
+        <div class="content-area">
+            <div class="tools-grid">
+                <!-- Truckload Calculator -->
+                <div class="tool-card">
+                    <div class="tool-icon">📊</div>
+                    <div class="tool-title">
+                        Truckload Calculator
+                        <span class="status-badge status-ready">Production Ready</span>
+                    </div>
+                    <div class="tool-description">
+                        Professional load optimization with DOT weight management, trailer volume calculations, and instant fence project quotes. Dual pricing for resellers and contractors with 3% cull factor built in.
+                    </div>
+                    <a href="calculator.html" class="tool-button">Launch Calculator</a>
                 </div>
-                <div class="tool-description">
-                    Calculate precise truckload configurations, manage DOT weight limits, optimize trailer volume, and generate instant quotes for fence projects. Professional pricing for resellers and contractors.
-                </div>
-                <a href="calculator.html" class="tool-button">Launch Calculator</a>
-            </div>
 
-            <!-- 3D Trailer Loader -->
-            <div class="tool-card">
-                <div class="tool-icon">🚚</div>
-                <div class="tool-title">
-                    3D Trailer Loader
-                    <span class="status-badge status-beta">BETA</span>
+                <!-- 3D Trailer Loader -->
+                <div class="tool-card">
+                    <div class="tool-icon">🚚</div>
+                    <div class="tool-title">
+                        3D Trailer Loader
+                        <span class="status-badge status-beta">Beta Testing</span>
+                    </div>
+                    <div class="tool-description">
+                        Interactive 3D visualization for optimal trailer loading configurations. Plan bundle placement, maximize space utilization, and ensure safe transport with real-time 3D modeling.
+                    </div>
+                    <a href="3d-loader.html" class="tool-button">Launch 3D Loader</a>
                 </div>
-                <div class="tool-description">
-                    Visualize optimal trailer loading configurations in 3D. Plan your loads, maximize space utilization, and ensure safe transport with interactive 3D modeling.
-                </div>
-                <a href="3d-loader.html" class="tool-button">Launch 3D Loader</a>
             </div>
         </div>
 
         <div class="footer">
-            <strong>GopherWood Manufacturing</strong><br>
-            346 Old Liberty Rd, Alexandria, TN<br>
-            © 2025 EXPERT Professional Wood Care | Stain & Seal Experts
+            <strong>GopherWood Manufacturing</strong>
+            <div class="footer-info">
+                346 Old Liberty Rd, Alexandria, TN 37012<br>
+                Phone: (615) 529-1010 • info@gopherwood.us<br>
+                © 2025 EXPERT Professional Wood Care • Stain & Seal Experts<br>
+                <em>Preserve Your Fence • Quality Factory Finished Lumber</em>
+            </div>
         </div>
     </div>
 </body>
