@@ -1,210 +1,440 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>GopherWood Calculator</title>
+    <title>GopherWood Truckload Calculator</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;500;700&display=swap');
+        
         body { 
-            font-family: Georgia; 
-            background: #8B4513; 
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #2c1810 0%, #4a2c1a 100%);
             color: #2F1B14; 
             margin: 0; 
-            padding: 20px; 
-            padding-top: 70px;
+            padding: 0;
+            min-height: 100vh;
         }
         
-        /* Navigation Bar */
+        /* Navigation Bar - GopherWood Brand Style */
         .nav-bar {
-            position: fixed;
+            background: linear-gradient(90deg, #1a0f08 0%, #2c1810 50%, #1a0f08 100%);
+            padding: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            border-bottom: 3px solid #d4a574;
+            display: flex;
+            align-items: center;
+            height: 70px;
+        }
+        
+        .nav-logo {
+            background: #d4a574;
+            padding: 15px 25px;
+            clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
+            margin-right: 20px;
+        }
+        
+        .nav-back {
+            color: #2c1810;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .nav-title {
+            color: #d4a574;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 30px auto; 
+            background: linear-gradient(135deg, #f5f5f0 0%, #e8e8e0 100%);
+            border-radius: 0;
+            padding: 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+        
+        .header { 
+            background: linear-gradient(135deg, #8b6331 0%, #6b4423 100%);
+            color: white;
+            text-align: center; 
+            padding: 30px;
+            border-bottom: 4px solid #d4a574;
+        }
+        
+        h1 { 
+            font-family: 'Bebas Neue', sans-serif;
+            color: white;
+            font-size: 42px;
+            margin: 0;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+        }
+        
+        .header p {
+            color: #d4a574;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+        
+        .content-area {
+            padding: 30px;
+        }
+        
+        .section { 
+            background: white;
+            border: none;
+            border-left: 5px solid #6b4423;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .section::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            background: #2F1B14;
-            padding: 15px;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        .nav-back {
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            background: #228B22;
-            border-radius: 5px;
-            font-weight: bold;
-            display: inline-block;
-        }
-        .nav-back:hover {
-            background: #1F6B1F;
-        }
-        .nav-title {
-            color: white;
-            display: inline-block;
-            margin-left: 20px;
-            font-size: 1.2em;
+            height: 3px;
+            background: linear-gradient(90deg, #d4a574 0%, transparent 100%);
         }
         
-        .container { max-width: 1000px; margin: 0 auto; background: #FFF8DC; border-radius: 15px; padding: 30px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        h1 { color: #8B4513; }
-        .section { background: rgba(144, 238, 144, 0.3); border: 2px solid #228B22; border-radius: 10px; padding: 20px; margin: 20px 0; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        input { width: 100%; padding: 8px; border: 2px solid #8B4513; border-radius: 5px; box-sizing: border-box; }
-        button { padding: 12px 25px; background: #228B22; color: white; border: none; border-radius: 8px; cursor: pointer; margin: 5px; }
-        button:hover { background: #1F6B1F; }
-        .result { background: #FFE4B5; border: 2px solid #D2691E; border-radius: 5px; padding: 10px; text-align: center; font-weight: bold; margin-top: 10px; }
+        h3, h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: #2c1810;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 25px; 
+        }
+        
+        input, select { 
+            width: 100%; 
+            padding: 10px; 
+            border: 2px solid #8b6331;
+            background: white;
+            border-radius: 0;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #d4a574;
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.2);
+        }
+        
+        button { 
+            padding: 14px 35px; 
+            background: linear-gradient(135deg, #6b4423 0%, #4a2c1a 100%);
+            color: white; 
+            border: none; 
+            border-radius: 0;
+            cursor: pointer; 
+            margin: 5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        button:hover { 
+            background: linear-gradient(135deg, #8b6331 0%, #6b4423 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+        
+        .action-buttons {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.1), transparent);
+        }
+        
+        .result { 
+            background: linear-gradient(135deg, #fff 0%, #f5f5f0 100%);
+            border: 2px solid #d4a574;
+            border-radius: 0;
+            padding: 15px;
+            text-align: center; 
+            font-weight: bold; 
+            margin-top: 15px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .result div {
+            color: #2c1810;
+            font-size: 15px;
+            margin: 5px 0;
+        }
+        
+        /* Professional Status Indicators */
+        .status-safe {
+            color: #2d5f3f;
+            background: rgba(45, 95, 63, 0.1);
+            padding: 2px 8px;
+            border-left: 3px solid #2d5f3f;
+        }
+        
+        .status-caution {
+            color: #8b6331;
+            background: rgba(139, 99, 49, 0.1);
+            padding: 2px 8px;
+            border-left: 3px solid #8b6331;
+        }
+        
+        .status-warning {
+            color: #d4a574;
+            background: rgba(212, 165, 116, 0.1);
+            padding: 2px 8px;
+            border-left: 3px solid #d4a574;
+        }
+        
+        .status-danger {
+            color: #8b0000;
+            background: rgba(139, 0, 0, 0.1);
+            padding: 2px 8px;
+            border-left: 3px solid #8b0000;
+        }
+        
+        /* Progress Bars */
+        .progress-container {
+            background: white;
+            border: 2px solid #8b6331;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .progress-label {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            color: #2c1810;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .progress-bar-bg {
+            background: #e8e8e0;
+            height: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        
+        /* Summary Grid */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-item {
+            background: white;
+            border-left: 4px solid #d4a574;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .summary-label {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            color: #6b4423;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .summary-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c1810;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="nav-bar">
-        <a href="index.html" class="nav-back">← Back to Arsenal</a>
-        <span class="nav-title">GopherWood Truckload Calculator</span>
+        <div class="nav-logo">
+            <a href="index.html" class="nav-back">← BACK TO ARSENAL</a>
+        </div>
+        <span class="nav-title">GopherWood Professional Truckload Calculator</span>
     </div>
     
     <div class="container">
         <div class="header">
             <h1>GopherWood Calculator</h1>
-            <p>Gopherwood Elite Sales Team Arsenal</p>
+            <p>Factory-Finished Lumber • Premium Quality • Built to Last</p>
         </div>
 
-        <div class="section">
-            <h3>Professional Fence Calculator</h3>
-            <div style="margin-bottom: 15px;">
-                <label>Linear Feet of Fence:</label>
-                <input type="number" id="fenceInput">
-            </div>
-            <div style="margin-bottom: 15px;">
-                <label>Customer Type:</label>
-                <select id="customerType" style="width: 100%; padding: 8px; border: 2px solid #8B4513; border-radius: 5px;">
-                    <option value="reseller">Reseller Pricing</option>
-                    <option value="contractor">Contractor Pricing</option>
-                </select>
-            </div>
-            <button onclick="doFenceCalc()">Calculate Fence Materials</button>
-            <div id="fenceResult" style="margin-top: 15px; display: none;">
-                <div id="fenceDetails"></div>
-                <div id="fenceTotal" style="font-size: 1.5em; font-weight: bold; text-align: center; margin-top: 10px;"></div>
-            </div>
-        </div>
-
-        <div style="text-align: center; margin: 20px 0;">
-            <button onclick="load48()">48' Truck Load</button>
-            <button onclick="load53()">53' Truck Load</button>
-            <button onclick="clearAll()">Clear All</button>
-        </div>
-
-        <div class="grid">
+        <div class="content-area">
             <div class="section">
-                <h4>6' Dogear Pickets</h4>
-                <div style="margin-bottom: 10px;">
-                    <label>Number of Bundles:</label>
-                    <input type="number" id="p6bundles" value="16" onchange="calc()">
+                <h3>Professional Fence Calculator</h3>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #2c1810;">Linear Feet of Fence:</label>
+                    <input type="number" id="fenceInput" placeholder="Enter linear feet">
                 </div>
-                <div style="margin-bottom: 10px;">
-                    <label>Price Per Piece:</label>
-                    <input type="number" step="0.01" id="p6price" value="3.61" onchange="calc()">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #2c1810;">Customer Type:</label>
+                    <select id="customerType">
+                        <option value="reseller">Reseller Pricing</option>
+                        <option value="contractor">Contractor Pricing</option>
+                    </select>
                 </div>
-                <div class="result">
-                    <div>Bundle Price: $<span id="p6bundle">2021.60</span></div>
-                    <div>Total: $<span id="p6total">32345.60</span></div>
+                <button onclick="doFenceCalc()">Calculate Fence Materials</button>
+                <div id="fenceResult" style="margin-top: 15px; display: none;">
+                    <div id="fenceDetails"></div>
+                    <div id="fenceTotal" style="font-size: 1.5em; font-weight: bold; text-align: center; margin-top: 10px;"></div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button onclick="load48()">Load 48' Truck</button>
+                <button onclick="load53()">Load 53' Truck</button>
+                <button onclick="clearAll()">Clear All</button>
+            </div>
+
+            <div class="grid">
+                <div class="section">
+                    <h4>6' Dogear Pickets</h4>
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-weight: 600;">Number of Bundles:</label>
+                        <input type="number" id="p6bundles" value="16" onchange="calc()">
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-weight: 600;">Price Per Piece:</label>
+                        <input type="number" step="0.01" id="p6price" value="3.61" onchange="calc()">
+                    </div>
+                    <div class="result">
+                        <div>Bundle Price: $<span id="p6bundle">2021.60</span></div>
+                        <div>Total: $<span id="p6total">32345.60</span></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>8' Dogear Pickets</h4>
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-weight: 600;">Number of Bundles:</label>
+                        <input type="number" id="p8bundles" value="0" onchange="calc()">
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-weight: 600;">Price Per Piece:</label>
+                        <input type="number" step="0.01" id="p8price" value="5.50" onchange="calc()">
+                    </div>
+                    <div class="result">
+                        <div>Bundle Price: $<span id="p8bundle">3080.00</span></div>
+                        <div>Total: $<span id="p8total">0.00</span></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>2x4x8 Rough Rails</h4>
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-weight: 600;">Number of Bundles:</label>
+                        <input type="number" id="r24bundles" value="16" onchange="calc()">
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-weight: 600;">Price Per Piece:</label>
+                        <input type="number" step="0.01" id="r24price" value="8.65" onchange="calc()">
+                    </div>
+                    <div class="result">
+                        <div>Bundle Price: $<span id="r24bundle">934.20</span></div>
+                        <div>Total: $<span id="r24total">14947.20</span></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>4x4x8 Posts w/ PostSaver</h4>
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-weight: 600;">Number of Bundles:</label>
+                        <input type="number" id="r44bundles" value="0" onchange="calc()">
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-weight: 600;">Price Per Piece:</label>
+                        <input type="number" step="0.01" id="r44price" value="33.80" onchange="calc()">
+                    </div>
+                    <div class="result">
+                        <div>Bundle Price: $<span id="r44bundle">1622.40</span></div>
+                        <div>Total: $<span id="r44total">0.00</span></div>
+                    </div>
                 </div>
             </div>
 
             <div class="section">
-                <h4>8' Dogear Pickets</h4>
-                <div style="margin-bottom: 10px;">
-                    <label>Number of Bundles:</label>
-                    <input type="number" id="p8bundles" value="0" onchange="calc()">
+                <h3>Load Summary - Professional Weight & Volume Management</h3>
+                
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label">Grand Total</div>
+                        <div class="summary-value" id="grandTotal" style="color: #2d5f3f;">$47,292.80</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Load Weight</div>
+                        <div class="summary-value" id="totalWeight">37,088 lbs</div>
+                        <div id="weightStatus" style="font-size: 14px; margin-top: 5px; font-weight: 600;">Weight OK</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Load Volume</div>
+                        <div class="summary-value" id="totalVolume">2,107 cu ft</div>
+                        <div id="volumeStatus" style="font-size: 14px; margin-top: 5px; font-weight: 600;">Volume OK</div>
+                    </div>
                 </div>
-                <div style="margin-bottom: 10px;">
-                    <label>Price Per Piece:</label>
-                    <input type="number" step="0.01" id="p8price" value="5.50" onchange="calc()">
+                
+                <!-- Weight Management Bar -->
+                <div class="progress-container">
+                    <div class="progress-label">DOT Weight Limit: 48,000 lbs</div>
+                    <div class="progress-bar-bg">
+                        <div id="weightBar" class="progress-bar-fill" style="background: linear-gradient(90deg, #2d5f3f 0%, #2d5f3f 60%, #8b6331 60%, #8b6331 85%, #8b0000 85%); width: 77%;"></div>
+                    </div>
                 </div>
-                <div class="result">
-                    <div>Bundle Price: $<span id="p8bundle">3080.00</span></div>
-                    <div>Total: $<span id="p8total">0.00</span></div>
+                
+                <!-- Volume Management Bar -->
+                <div class="progress-container">
+                    <div class="progress-label">
+                        Trailer Volume: <span id="volumeLimit">3,264</span> cubic feet
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="volumeBar" class="progress-bar-fill" style="background: linear-gradient(90deg, #6b4423 0%, #6b4423 70%, #8b6331 70%, #8b6331 90%, #8b0000 90%); width: 65%;"></div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="section">
-                <h4>2x4x8 Rough</h4>
-                <div style="margin-bottom: 10px;">
-                    <label>Number of Bundles:</label>
-                    <input type="number" id="r24bundles" value="16" onchange="calc()">
+                
+                <!-- Trailer Size Selector -->
+                <div style="text-align: center; margin: 20px 0;">
+                    <label style="font-weight: 700; margin-right: 10px; text-transform: uppercase;">Trailer Size:</label>
+                    <select id="trailerSize" onchange="updateTrailerSize()" style="width: auto; display: inline-block;">
+                        <option value="48">48' Trailer (3,264 cu ft)</option>
+                        <option value="53">53' Trailer (3,604 cu ft)</option>
+                    </select>
                 </div>
-                <div style="margin-bottom: 10px;">
-                    <label>Price Per Piece:</label>
-                    <input type="number" step="0.01" id="r24price" value="8.65" onchange="calc()">
+                
+                <div style="margin-top: 15px; padding: 15px; background: rgba(212, 165, 116, 0.1); border-left: 4px solid #d4a574;">
+                    <div id="loadDetails" style="color: #2c1810;">16 Bundles 6' Dogear Pickets (8,960 pieces)<br>16 Bundles 2x4x8 Rough (1,728 pieces)</div>
                 </div>
-                <div class="result">
-                    <div>Bundle Price: $<span id="r24bundle">934.20</span></div>
-                    <div>Total: $<span id="r24total">14947.20</span></div>
-                </div>
-            </div>
-
-            <div class="section">
-                <h4>4x4x8 Rough w/ PostSaver</h4>
-                <div style="margin-bottom: 10px;">
-                    <label>Number of Bundles:</label>
-                    <input type="number" id="r44bundles" value="0" onchange="calc()">
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label>Price Per Piece:</label>
-                    <input type="number" step="0.01" id="r44price" value="33.80" onchange="calc()">
-                </div>
-                <div class="result">
-                    <div>Bundle Price: $<span id="r44bundle">1622.40</span></div>
-                    <div>Total: $<span id="r44total">0.00</span></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3>Load Summary - Weight & Volume Management</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                <div style="text-align: center;">
-                    <div style="font-size: 1.3em; font-weight: bold; color: #006400;">Grand Total</div>
-                    <div id="grandTotal" style="font-size: 1.8em; color: #006400; font-weight: bold;">$47,292.80</div>
-                </div>
-                <div style="text-align: center;">
-                    <div style="font-size: 1.3em; font-weight: bold; color: #8B4513;">Load Weight</div>
-                    <div id="totalWeight" style="font-size: 1.8em; color: #8B4513; font-weight: bold;">37,088 lbs</div>
-                    <div id="weightStatus" style="font-size: 0.9em; margin-top: 5px; font-weight: bold;">Weight OK - 10,912 lbs remaining</div>
-                </div>
-                <div style="text-align: center;">
-                    <div style="font-size: 1.3em; font-weight: bold; color: #6f42c1;">Load Volume</div>
-                    <div id="totalVolume" style="font-size: 1.8em; color: #6f42c1; font-weight: bold;">2,107 cu ft</div>
-                    <div id="volumeStatus" style="font-size: 0.9em; margin-top: 5px; font-weight: bold;">Volume OK - 1,157 cu ft remaining</div>
-                </div>
-            </div>
-            
-            <!-- Weight Management Bar -->
-            <div style="background: rgba(255,255,255,0.8); border: 2px solid #8B4513; border-radius: 8px; padding: 10px; margin-bottom: 10px;">
-                <div style="font-size: 1.1em; font-weight: bold; color: #8B4513; margin-bottom: 5px; text-align: center;">DOT Weight Limit: 48,000 lbs</div>
-                <div style="background: #f0f0f0; height: 15px; border-radius: 8px; overflow: hidden; margin-bottom: 5px;">
-                    <div id="weightBar" style="height: 100%; background: linear-gradient(to right, #28a745 0%, #28a745 60%, #ffc107 60%, #ffc107 85%, #dc3545 85%); width: 77%; transition: all 0.3s;"></div>
-                </div>
-            </div>
-            
-            <!-- Volume Management Bar -->
-            <div style="background: rgba(255,255,255,0.8); border: 2px solid #6f42c1; border-radius: 8px; padding: 10px; margin-bottom: 15px;">
-                <div style="font-size: 1.1em; font-weight: bold; color: #6f42c1; margin-bottom: 5px; text-align: center;">
-                    Trailer Volume Limit: <span id="volumeLimit">3,264</span> cubic feet
-                </div>
-                <div style="background: #f0f0f0; height: 15px; border-radius: 8px; overflow: hidden; margin-bottom: 5px;">
-                    <div id="volumeBar" style="height: 100%; background: linear-gradient(to right, #6f42c1 0%, #6f42c1 70%, #ffc107 70%, #ffc107 90%, #dc3545 90%); width: 65%; transition: all 0.3s;"></div>
-                </div>
-            </div>
-            
-            <!-- Trailer Size Selector -->
-            <div style="text-align: center; margin-bottom: 15px;">
-                <label style="font-weight: bold; margin-right: 10px;">Trailer Size:</label>
-                <select id="trailerSize" onchange="updateTrailerSize()" style="padding: 5px; border: 2px solid #8B4513; border-radius: 5px;">
-                    <option value="48">48' Trailer (3,264 cu ft)</option>
-                    <option value="53">53' Trailer (3,604 cu ft)</option>
-                </select>
-            </div>
-            
-            <div style="margin-top: 15px;">
-                <div id="loadDetails">16 Bundles 6' Dogear Pickets (8,960 pieces)<br>16 Bundles 2x4x8 Rough (1,728 pieces)</div>
             </div>
         </div>
     </div>
@@ -295,18 +525,18 @@ function calc() {
     weightBar.style.width = Math.min(weightPercent, 100) + "%";
     
     if (totalWeight <= 28800) {
-        weightStatus.innerHTML = "SAFE WEIGHT - " + remainingWeight.toLocaleString() + " lbs remaining";
-        weightStatus.style.color = "#28a745";
+        weightStatus.innerHTML = "SAFE - " + remainingWeight.toLocaleString() + " lbs remaining";
+        weightStatus.style.color = "#2d5f3f";
     } else if (totalWeight <= 40800) {
         weightStatus.innerHTML = "CAUTION - " + remainingWeight.toLocaleString() + " lbs remaining";
-        weightStatus.style.color = "#ffc107";
+        weightStatus.style.color = "#8b6331";
     } else if (totalWeight < weightLimit) {
-        weightStatus.innerHTML = "WARNING - Only " + remainingWeight.toLocaleString() + " lbs remaining";
-        weightStatus.style.color = "#fd7e14";
+        weightStatus.innerHTML = "WARNING - " + remainingWeight.toLocaleString() + " lbs remaining";
+        weightStatus.style.color = "#d4a574";
     } else {
         var overweight = totalWeight - weightLimit;
-        weightStatus.innerHTML = "OVERWEIGHT - " + overweight.toLocaleString() + " lbs over limit!";
-        weightStatus.style.color = "#dc3545";
+        weightStatus.innerHTML = "OVERWEIGHT - " + overweight.toLocaleString() + " lbs over!";
+        weightStatus.style.color = "#8b0000";
     }
     
     var volumePercent = (totalVolume / volumeLimit) * 100;
@@ -316,28 +546,28 @@ function calc() {
     volumeBar.style.width = Math.min(volumePercent, 100) + "%";
     
     if (totalVolume <= volumeLimit * 0.7) {
-        volumeStatus.innerHTML = "VOLUME OK - " + Math.round(remainingVolume).toLocaleString() + " cu ft remaining";
-        volumeStatus.style.color = "#6f42c1";
+        volumeStatus.innerHTML = "SAFE - " + Math.round(remainingVolume).toLocaleString() + " cu ft remaining";
+        volumeStatus.style.color = "#2d5f3f";
     } else if (totalVolume <= volumeLimit * 0.9) {
-        volumeStatus.innerHTML = "VOLUME CAUTION - " + Math.round(remainingVolume).toLocaleString() + " cu ft remaining";
-        volumeStatus.style.color = "#ffc107";
+        volumeStatus.innerHTML = "CAUTION - " + Math.round(remainingVolume).toLocaleString() + " cu ft remaining";
+        volumeStatus.style.color = "#8b6331";
     } else if (totalVolume < volumeLimit) {
-        volumeStatus.innerHTML = "VOLUME WARNING - Only " + Math.round(remainingVolume).toLocaleString() + " cu ft remaining";
-        volumeStatus.style.color = "#fd7e14";
+        volumeStatus.innerHTML = "WARNING - " + Math.round(remainingVolume).toLocaleString() + " cu ft remaining";
+        volumeStatus.style.color = "#d4a574";
     } else {
         var overage = totalVolume - volumeLimit;
-        volumeStatus.innerHTML = "VOLUME EXCEEDED - " + Math.round(overage).toLocaleString() + " cu ft over limit!";
-        volumeStatus.style.color = "#dc3545";
+        volumeStatus.innerHTML = "EXCEEDED - " + Math.round(overage).toLocaleString() + " cu ft over!";
+        volumeStatus.style.color = "#8b0000";
     }
     
     var details = "";
     if (p6b > 0) details += p6b + " Bundles 6' Dogear Pickets (" + (p6b * 560) + " pieces, " + p6weight.toLocaleString() + " lbs, " + Math.round(p6volume) + " cu ft)<br>";
     if (p8b > 0) details += p8b + " Bundles 8' Dogear Pickets (" + (p8b * 560) + " pieces, " + p8weight.toLocaleString() + " lbs, " + Math.round(p8volume) + " cu ft)<br>";
-    if (r24b > 0) details += r24b + " Bundles 2x4x8 Rough (" + (r24b * 108) + " pieces, " + r24weight.toLocaleString() + " lbs, " + Math.round(r24volume) + " cu ft)<br>";
-    if (r44b > 0) details += r44b + " Bundles 4x4x8 Rough (" + (r44b * 48) + " pieces, " + r44weight.toLocaleString() + " lbs, " + Math.round(r44volume) + " cu ft)<br>";
+    if (r24b > 0) details += r24b + " Bundles 2x4x8 Rails (" + (r24b * 108) + " pieces, " + r24weight.toLocaleString() + " lbs, " + Math.round(r24volume) + " cu ft)<br>";
+    if (r44b > 0) details += r44b + " Bundles 4x4x8 Posts (" + (r44b * 48) + " pieces, " + r44weight.toLocaleString() + " lbs, " + Math.round(r44volume) + " cu ft)<br>";
     
     if (totalWeight > weightLimit || totalVolume > volumeLimit) {
-        details += "<br><strong style='color: #dc3545;'>WARNING: This load exceeds DOT or trailer limits!</strong>";
+        details += "<br><strong style='color: #8b0000;'>⚠️ WARNING: This load exceeds DOT or trailer limits!</strong>";
     }
     
     document.getElementById("loadDetails").innerHTML = details || "No items selected";
@@ -394,16 +624,16 @@ function doFenceCalc() {
     
     if (totalWeight <= 28800) {
         weightStatus = "SAFE WEIGHT";
-        weightColor = "#28a745";
+        weightColor = "#2d5f3f";
     } else if (totalWeight <= 40800) {
         weightStatus = "CAUTION";
-        weightColor = "#ffc107";
+        weightColor = "#8b6331";
     } else if (totalWeight < weightLimit) {
         weightStatus = "WARNING";
-        weightColor = "#fd7e14";
+        weightColor = "#d4a574";
     } else {
         weightStatus = "OVERWEIGHT!";
-        weightColor = "#dc3545";
+        weightColor = "#8b0000";
     }
     
     var volumeLimit = 3264;
@@ -412,41 +642,52 @@ function doFenceCalc() {
     
     if (totalVolume <= volumeLimit * 0.7) {
         volumeStatus = "VOLUME OK";
-        volumeColor = "#6f42c1";
+        volumeColor = "#2d5f3f";
     } else if (totalVolume <= volumeLimit * 0.9) {
         volumeStatus = "VOLUME CAUTION";
-        volumeColor = "#ffc107";
+        volumeColor = "#8b6331";
     } else if (totalVolume < volumeLimit) {
         volumeStatus = "VOLUME WARNING";
-        volumeColor = "#fd7e14";
+        volumeColor = "#d4a574";
     } else {
         volumeStatus = "VOLUME EXCEEDED!";
-        volumeColor = "#dc3545";
+        volumeColor = "#8b0000";
     }
     
     var details = "";
-    details += "<div><strong>" + feet + " Linear Feet = " + sections + " Sections</strong></div>";
-    details += "<div>With 3% Cull: " + totalPickets + " pickets, " + totalRails + " rails, " + totalPosts + " posts</div>";
-    details += "<div><strong>Bundle Requirements, Weights & Volumes:</strong></div>";
-    details += "<div>" + picketBundles + " picket bundles @ $" + picketPrice + "/pc = $" + picketCost.toFixed(2) + " (" + picketWeight.toLocaleString() + " lbs, " + Math.round(picketVolume) + " cu ft)</div>";
-    details += "<div>" + railBundles + " rail bundles @ $" + railPrice + "/pc = $" + railCost.toFixed(2) + " (" + railWeight.toLocaleString() + " lbs, " + Math.round(railVolume) + " cu ft)</div>";
-    details += "<div>" + postBundles + " post bundles @ $" + postPrice + "/pc = $" + postCost.toFixed(2) + " (" + postWeight.toLocaleString() + " lbs, " + Math.round(postVolume) + " cu ft)</div>";
-    details += "<div style='margin-top: 10px;'><strong>Customer Type: " + (customerType === "reseller" ? "RESELLER" : "CONTRACTOR") + " PRICING</strong></div>";
-    details += "<div style='margin-top: 8px; font-weight: bold; color: " + weightColor + ";'>Total Weight: " + totalWeight.toLocaleString() + " lbs - " + weightStatus + "</div>";
-    details += "<div style='font-weight: bold; color: " + volumeColor + ";'>Total Volume: " + Math.round(totalVolume) + " cu ft - " + volumeStatus + "</div>";
+    details += "<div style='padding: 15px; background: rgba(212, 165, 116, 0.1); border-left: 4px solid #d4a574; margin-bottom: 15px;'>";
+    details += "<strong style='color: #2c1810;'>" + feet + " Linear Feet = " + sections + " Sections</strong><br>";
+    details += "With 3% Cull Factor: " + totalPickets + " pickets, " + totalRails + " rails, " + totalPosts + " posts";
+    details += "</div>";
     
-    if (totalWeight > weightLimit) {
-        var overweight = totalWeight - weightLimit;
-        details += "<div style='color: #dc3545; font-weight: bold;'>WARNING: " + overweight.toLocaleString() + " lbs over DOT limit!</div>";
-    }
+    details += "<div style='background: white; padding: 15px; border-left: 4px solid #6b4423;'>";
+    details += "<strong style='color: #2c1810; text-transform: uppercase;'>Bundle Requirements:</strong><br>";
+    details += picketBundles + " picket bundles @ $" + picketPrice + "/pc = $" + picketCost.toFixed(2) + " (" + picketWeight.toLocaleString() + " lbs)<br>";
+    details += railBundles + " rail bundles @ $" + railPrice + "/pc = $" + railCost.toFixed(2) + " (" + railWeight.toLocaleString() + " lbs)<br>";
+    details += postBundles + " post bundles @ $" + postPrice + "/pc = $" + postCost.toFixed(2) + " (" + postWeight.toLocaleString() + " lbs)<br>";
+    details += "</div>";
     
-    if (totalVolume > volumeLimit) {
-        var overage = totalVolume - volumeLimit;
-        details += "<div style='color: #dc3545; font-weight: bold;'>WARNING: " + Math.round(overage) + " cu ft over trailer capacity!</div>";
+    details += "<div style='margin-top: 15px; padding: 10px; background: rgba(107, 68, 35, 0.1);'>";
+    details += "<strong>Customer Type: " + (customerType === "reseller" ? "RESELLER" : "CONTRACTOR") + " PRICING</strong><br>";
+    details += "<div style='margin-top: 8px; font-weight: bold; color: " + weightColor + ";'>Weight: " + totalWeight.toLocaleString() + " lbs - " + weightStatus + "</div>";
+    details += "<div style='font-weight: bold; color: " + volumeColor + ";'>Volume: " + Math.round(totalVolume) + " cu ft - " + volumeStatus + "</div>";
+    details += "</div>";
+    
+    if (totalWeight > weightLimit || totalVolume > volumeLimit) {
+        details += "<div style='margin-top: 15px; padding: 10px; background: rgba(139, 0, 0, 0.1); border-left: 4px solid #8b0000;'>";
+        if (totalWeight > weightLimit) {
+            var overweight = totalWeight - weightLimit;
+            details += "<strong>⚠️ " + overweight.toLocaleString() + " lbs over DOT limit!</strong><br>";
+        }
+        if (totalVolume > volumeLimit) {
+            var overage = totalVolume - volumeLimit;
+            details += "<strong>⚠️ " + Math.round(overage) + " cu ft over trailer capacity!</strong>";
+        }
+        details += "</div>";
     }
     
     document.getElementById("fenceDetails").innerHTML = details;
-    document.getElementById("fenceTotal").innerHTML = "Total: $" + totalCost.toFixed(2);
+    document.getElementById("fenceTotal").innerHTML = "TOTAL: $" + totalCost.toFixed(2);
     document.getElementById("fenceResult").style.display = "block";
 }
 
