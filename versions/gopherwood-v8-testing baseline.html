@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GopherWood 3D Flatbed Loading System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: 'Arial', sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+        
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #ff6b35;
+            z-index: 100;
+            min-width: 320px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        #controls h2 {
+            color: #ff6b35;
+            margin-top: 0;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #ff6b35, #ff8c42);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 3px 3px 3px 0;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+        }
+        
+        #stats {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #32cd32;
+            z-index: 100;
+            min-width: 280px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        #stats h3 {
+            color: #32cd32;
+            margin-top: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        
+        .stat-item {
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            height: 22px;
+            margin-top: 5px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            transition: all 0.5s ease;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .safe { background: linear-gradient(90deg, #32cd32, #90ee90); }
+        .caution { background: linear-gradient(90deg, #ffa500, #ffff00); }
+        .danger { background: linear-gradient(90deg, #ff4500, #ff0000); }
+        
+        #info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #4169e1;
+            color: #87ceeb;
+            max-width: 420px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .trailer-info {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 4px solid #ffd700;
+        }
+
+        .loading-sequence {
+            background: rgba(139, 69, 19, 0.3);
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 8px;
+            border-left: 3px solid #8B4513;
+        }
+
+        .shipping-tool {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 8px;
+            border-left: 3px solid #ffffff;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="controls">
+            <h2>GopherWood Load Planner</h2>
+            <p style="color: #ffd700; font-size: 12px; margin: 0 0 15px 0;">
+                <strong>Shipping Department:</strong> Optimal load planning for safe transport
+            </p>
+            
+            <div class="control-group">
+                <label>Trailer Size:</label>
+                <select id="trailerSize">
+                    <option value="48">48' Flatbed</option>
+                    <option value="53">53' Flatbed</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>Product Type (Forklift Loading Order):</label>
+                <select id="productType">
+                    <option value="dogear">🚪 6' Dogear Pickets (560/bundle, 1,400 lbs) - LOAD FIRST</option>
+                    <option value="rough4x4">🗿 4x4x8 Rough (48/bundle, 816 lbs) - LOAD SECOND</option>
+                    <option value="rough2x4">📦 2x4x8 Rough (108/bundle, 918 lbs) - LOAD THIRD</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>Number of Bundles:</label>
+                <input type="number" id="bundleCount" min="0" max="50" value="1">
+            </div>
+            
+            <button onclick="addBundles()" id="loadBtn">🔥 Load Bundles</button>
+            <button onclick="clearTrailer()">Clear</button><br>
+            <button onclick="loadPopularConfig()">Popular Load</button>
+            <button onclick="loadOptimalConfig()">Max Load</button>
+        </div>
+        
+        <div id="stats">
+            <h3>Load Statistics</h3>
+            <div class="stat-item">
+                <strong>Weight Capacity:</strong>
+                <div class="progress-bar">
+                    <div class="progress-fill safe" id="weightProgress" style="width: 0%"></div>
+                </div>
+                <span id="weightText">0 / 48,000 lbs (0%)</span>
+            </div>
+            
+            <div class="stat-item">
+                <strong>Height Limit:</strong>
+                <div class="progress-bar">
+                    <div class="progress-fill safe" id="heightProgress" style="width: 0%"></div>
+                </div>
+                <span id="heightText">0 / 13.5 ft (0%)</span>
+            </div>
+            
+            <div class="stat-item">
+                <strong>Bundles Loaded:</strong> <span id="bundleCountDisplay">0</span>
+            </div>
+            
+            <div class="stat-item">
+                <strong>Total Value:</strong> <span id="totalValue">$0.00</span>
+            </div>
+
+            <div class="stat-item">
+                <strong>Load Status:</strong> <span id="loadStatus">Ready to Load</span>
+            </div>
+        </div>
+        
+        <div id="info">
+            <h4>Controls:</h4>
+            <p><strong>Mouse:</strong> Click and drag to rotate view</p>
+            <p><strong>Scroll:</strong> Zoom in/out</p>
+            <p><strong>Popular Load:</strong> 16 dogear + 16 rough 2x4</p>
+            <p><strong>Max Load:</strong> Optimized for weight capacity</p>
+            
+            <div class="trailer-info">
+                <strong>Current Trailer:</strong> <span id="currentTrailer">48' x 8.5' Professional Flatbed</span>
+            </div>
+
+            <div class="loading-sequence">
+                <strong>Forklift Operator Protocol:</strong><br>
+                1. Pickets first - front positions (1,400 lbs/bundle)<br>
+                2. Heavy 4x4s - over axles (816 lbs/bundle)<br>
+                3. Medium 2x4s - fill remaining space (918 lbs/bundle)<br>
+                <em>Optimizes space & weight distribution</em>
+            </div>
+
+            <div class="shipping-tool">
+                <strong>Shipping Department Tool:</strong><br>
+                Optimal loading sequence for safe transport<br>
+                Prevents overweight violations & shifting loads
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Scene setup
+        let scene, camera, renderer, controls;
+        let trailer, bundles = [];
+        let currentBundleId = 0;
+        let loadingAnimation = false;
+        
+        // Flatbed trailer specifications - Fixed height limit
+        const trailerSpecs = {
+            '48': { length: 48, width: 8.5, height: 13.5, maxWeight: 48000 },
+            '53': { length: 53, width: 8.5, height: 13.5, maxWeight: 48000 }
+        };
+        
+        // Product specifications - CORRECTED WEIGHTS AND PIECES
+        const productSpecs = {
+            'dogear': {
+                name: '6\' Dogear Pickets',
+                bundleSize: { length: 6, width: 4, height: 3.92 }, // 47" = 3.92 feet tall
+                weight: 1400, // 560 pieces × 2.5 lbs each
+                pieces: 560,
+                price: 3.61,
+                color: 0xFFE4E1, // Light pink
+                priority: 3,
+                type: 'pickets'
+            },
+            'rough2x4': {
+                name: '2x4x8 Rough',
+                bundleSize: { length: 8, width: 4, height: 1.42 }, // 17" = 1.42 feet tall
+                weight: 918, // 108 pieces × 8.5 lbs each
+                pieces: 108,
+                price: 8.65,
+                color: 0xE6E6FA, // Light purple
+                priority: 2,
+                type: 'lumber'
+            },
+            'rough4x4': {
+                name: '4x4x8 Rough',
+                bundleSize: { length: 8, width: 4, height: 1.42 }, // Same as 2x4 - 17" tall
+                weight: 816, // 48 pieces × 17 lbs each
+                pieces: 48,
+                price: 33.80,
+                color: 0xE0FFFF, // Light cyan
+                priority: 1,
+                type: 'timber'
+            }
+        };
+        
+        let currentTrailerSize = '48';
+        let totalWeight = 0;
+        let totalHeight = 0;
+        let totalValue = 0;
+        let bundleInventory = { 'dogear': 0, 'rough2x4': 0, 'rough4x4': 0 };
+        
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB);
+            
+            // Create camera
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+            camera.position.set(50, 30, 50);
+            camera.lookAt(0, 0, 0);
+            
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.setClearColor(0x87CEEB);
+            document.getElementById('container').appendChild(renderer.domElement);
+            
+            // Enhanced lighting
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.7);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+            directionalLight.position.set(100, 100, 50);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 4096;
+            directionalLight.shadow.mapSize.height = 4096;
+            scene.add(directionalLight);
+            
+            // Create ground
+            const groundGeometry = new THREE.PlaneGeometry(200, 150);
+            const groundMaterial = new THREE.MeshLambertMaterial({ color: 0x696969 });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+            
+            // Create flatbed trailer
+            createFlatbed();
+            
+            // Mouse controls
+            setupMouseControls();
+            
+            // Event listeners
+            document.getElementById('trailerSize').addEventListener('change', changeTrailerSize);
+            document.getElementById('productType').addEventListener('change', updateBundleInput);
+            
+            window.addEventListener('resize', onWindowResize);
+            
+            updateBundleInput();
+            animate();
+        }
+        
+        function setupMouseControls() {
+            let mouseDown = false;
+            let mouseX = 0;
+            let mouseY = 0;
+            
+            renderer.domElement.addEventListener('mousedown', (event) => {
+                mouseDown = true;
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            });
+            
+            renderer.domElement.addEventListener('mouseup', () => {
+                mouseDown = false;
+            });
+            
+            renderer.domElement.addEventListener('mousemove', (event) => {
+                if (!mouseDown) return;
+                
+                const deltaX = event.clientX - mouseX;
+                const deltaY = event.clientY - mouseY;
+                
+                const spherical = new THREE.Spherical();
+                spherical.setFromVector3(camera.position);
+                spherical.theta -= deltaX * 0.01;
+                spherical.phi += deltaY * 0.01;
+                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi));
+                
+                camera.position.setFromSpherical(spherical);
+                camera.lookAt(0, 0, 0);
+                
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            });
+            
+            renderer.domElement.addEventListener('wheel', (event) => {
+                const distance = camera.position.length();
+                const newDistance = distance + event.deltaY * 0.2;
+                const clampedDistance = Math.max(20, Math.min(200, newDistance));
+                
+                camera.position.normalize().multiplyScalar(clampedDistance);
+            });
+        }
+        
+        function createFlatbed() {
+            if (trailer) {
+                scene.remove(trailer);
+            }
+            
+            trailer = new THREE.Group();
+            const spec = trailerSpecs[currentTrailerSize];
+            
+            // Flatbed deck - SILVER ALUMINUM - CENTERED AT ORIGIN
+            const deckGeometry = new THREE.BoxGeometry(spec.length, 1.0, spec.width);
+            const deckMaterial = new THREE.MeshLambertMaterial({ color: 0xC0C0C0 });
+            const deck = new THREE.Mesh(deckGeometry, deckMaterial);
+            deck.position.set(0, 0.5, 0); // Center deck at origin
+            deck.receiveShadow = true;
+            deck.castShadow = true;
+            trailer.add(deck);
+            
+            console.log(`Trailer deck: ${spec.length}' long, centered at x=0`);
+            console.log(`Deck extends from x=${-spec.length/2} to x=${spec.length/2}`);
+            
+            // DOT bumper at FRONT of trailer
+            const bumperGeometry = new THREE.BoxGeometry(0.5, 0.8, spec.width + 2);
+            const bumperMaterial = new THREE.MeshLambertMaterial({ color: 0xFF0000 });
+            const bumper = new THREE.Mesh(bumperGeometry, bumperMaterial);
+            bumper.position.set(-spec.length/2 - 0.25, 1.0, 0); // At front edge
+            trailer.add(bumper);
+            
+            // White stripes on bumper
+            for (let i = -2; i < 3; i += 1) {
+                const stripeGeometry = new THREE.BoxGeometry(0.51, 0.81, 1.5);
+                const stripeMaterial = new THREE.MeshLambertMaterial({ color: 0xFFFFFF });
+                const stripe = new THREE.Mesh(stripeGeometry, stripeMaterial);
+                stripe.position.set(-spec.length/2 - 0.25, 1.0, i * 2);
+                trailer.add(stripe);
+            }
+            
+            scene.add(trailer);
+            updateTrailerInfo();
+        }
+        
+        function addBundles() {
+            if (loadingAnimation) return;
+            
+            const productType = document.getElementById('productType').value;
+            const newTotal = parseInt(document.getElementById('bundleCount').value);
+            const currentCount = bundleInventory[productType];
+            
+            console.log(`Product: ${productType}, New Total: ${newTotal}, Current: ${currentCount}`);
+            console.log(`Bundle Inventory:`, bundleInventory);
+            console.log(`Product specs available:`, Object.keys(productSpecs));
+            
+            if (newTotal > currentCount) {
+                const toAdd = newTotal - currentCount;
+                console.log(`Attempting to add ${toAdd} bundles of ${productType}`);
+                loadBundlesWithAnimation(productType, toAdd);
+            } else if (newTotal < currentCount) {
+                const toRemove = currentCount - newTotal;
+                removeBundles(productType, toRemove);
+            }
+        }
+        
+        async function loadBundlesWithAnimation(productType, bundleCount) {
+            loadingAnimation = true;
+            const spec = productSpecs[productType];
+            const trailerSpec = trailerSpecs[currentTrailerSize];
+            
+            console.log(`Starting to load ${bundleCount} bundles of ${productType}`);
+            console.log(`Product spec found:`, spec);
+            
+            let successfullyLoaded = 0;
+            
+            for (let i = 0; i < bundleCount; i++) {
+                const position = calculateOptimalPosition(productType, spec, trailerSpec);
+                console.log(`Position calculated for bundle ${i}:`, position);
+                
+                if (!position) {
+                    console.log(`Could only load ${successfullyLoaded} of ${bundleCount} ${productType} bundles. Trailer at capacity.`);
+                    break;
+                }
+                
+                const bundle = createGopherWoodBundle(productType, currentBundleId++);
+                bundle.position.set(position.x, position.y, position.z);
+                scene.add(bundle);
+                
+                bundles.push({ 
+                    mesh: bundle, 
+                    type: productType, 
+                    spec: spec,
+                    position: { x: position.x, y: position.y, z: position.z }
+                });
+                
+                successfullyLoaded++;
+                totalWeight += spec.weight;
+                totalHeight = Math.max(totalHeight, position.y + spec.bundleSize.height/2);
+                totalValue += spec.price * spec.pieces;
+                
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+            
+            console.log(`Successfully loaded ${successfullyLoaded} bundles of ${productType}`);
+            bundleInventory[productType] += successfullyLoaded;
+            updateStats();
+            updateBundleInput();
+            loadingAnimation = false;
+        }
+        
+        function calculateOptimalPosition(productType, spec, trailerSpec) {
+            console.log(`\n=== FORKLIFT OPERATOR POSITIONING: ${spec.name} ===`);
+            
+            try {
+                if (spec.type === 'pickets') {
+                    return calculatePicketPosition(spec, trailerSpec);
+                } else {
+                    return calculateLumberPosition(productType, spec, trailerSpec);
+                }
+            } catch (error) {
+                console.error(`ERROR calculating position for ${productType}:`, error);
+                return null;
+            }
+        }
+        
+        function calculatePicketPosition(spec, trailerSpec) {
+            console.log(`Calculating picket position for ${trailerSpec.length}' trailer`);
+            
+            // Weight check
+            if (totalWeight + spec.weight > trailerSpec.maxWeight) {
+                console.log("Weight limit exceeded");
+                return null;
+            }
+            
+            // Count existing pickets
+            const existingPickets = bundles.filter(b => b.type === 'dogear');
+            console.log(`Existing pickets: ${existingPickets.length}`);
+            
+            // Determine which position in the stacking pattern
+            const bundleIndex = existingPickets.length;
+            const stackNumber = Math.floor(bundleIndex / 4);
+            const posInStack = bundleIndex % 4;
+            
+            // Decode position: 0=left-bottom, 1=left-top, 2=right-bottom, 3=right-top
+            let side, level;
+            if (posInStack === 0) {
+                side = 'left';
+                level = 0;
+            } else if (posInStack === 1) {
+                side = 'left';
+                level = 1;
+            } else if (posInStack === 2) {
+                side = 'right';
+                level = 0;
+            } else {
+                side = 'right';
+                level = 1;
+            }
+            
+            console.log(`Picket ${bundleIndex}: stack=${stackNumber}, side=${side}, level=${level}`);
+            
+            // Calculate Z position (left or right side)
+            let posZ = side === 'left' ? -2.125 : 2.125;
+            
+            // SMART POSITIONING: Check each side independently for available space
+            let startX = -trailerSpec.length/2; // Default to front
+            
+            // Special handling for last 2 pickets (9 and 10) in mixed loads - position at rear right for strapping
+            const otherBundles = bundles.filter(b => b.type !== 'dogear');
+            if (bundleIndex >= 8 && otherBundles.length > 0) {
+                // Force pickets 9 and 10 to the right side rear for proper load securement
+                console.log(`Picket ${bundleIndex + 1} (index ${bundleIndex}): Positioning at rear right for load strapping`);
+                
+                // Override side to right
+                const rightZ = 2.125;
+                posZ = rightZ;
+                side = 'right';
+                level = bundleIndex % 2; // Alternate bottom/top
+                
+                // Find where the REGULAR load ends (first 8 pickets + all lumber)
+                let furthestBack = -trailerSpec.length/2; // Start at front
+                
+                // Only check bundles that are NOT special pickets (pickets with index 8+)
+                bundles.forEach(bundle => {
+                    // Count how many pickets exist before this bundle
+                    const picketsBeforeThis = bundles.slice(0, bundles.indexOf(bundle))
+                                                    .filter(b => b.type === 'dogear').length;
+                    
+                    // If it's a picket with index 8 or higher, it's a special picket - skip it
+                    const isSpecialPicket = bundle.type === 'dogear' && picketsBeforeThis >= 8;
+                    
+                    if (!isSpecialPicket) {
+                        const bundleBack = bundle.position.x + bundle.spec.bundleSize.length/2;
+                        if (bundleBack > furthestBack) {
+                            furthestBack = bundleBack;
+                        }
+                    }
+                });
+                
+                console.log(`Furthest regular bundle ends at x=${furthestBack.toFixed(1)}`);
+                
+                // Position these special pickets tight against the furthest regular bundle
+                startX = furthestBack + 0.1; // Small gap after furthest regular bundle
+                
+                // Both rear pickets position at the same X location (stacked)
+                const rowX = startX + spec.bundleSize.length/2;
+                
+                console.log(`Rear picket ${bundleIndex + 1} positioning at x=${rowX.toFixed(1)} on right side for strapping`);
+                
+                // Check trailer bounds
+                if (rowX + spec.bundleSize.length/2 > trailerSpec.length/2) {
+                    console.log("No more room for pickets at rear");
+                    return null;
+                }
+                
+                // Calculate Y position
+                const posY = 1.0 + spec.bundleSize.height/2 + (level * spec.bundleSize.height);
+                
+                // Height check
+                if (posY + spec.bundleSize.height/2 > trailerSpec.height + 1.0) {
+                    console.log("Height limit exceeded");
+                    return null;
+                }
+                
+                return { x: rowX, y: posY, z: posZ };
+            }
+            
+            // Normal positioning logic for pickets 0-7
+            // Check if there are OTHER (non-picket) bundles already on this specific side
+            const otherBundlesOnThisSide = bundles.filter(b => 
+                b.type !== 'dogear' && Math.abs(b.position.z - posZ) < 1
+            );
+            
+            if (otherBundlesOnThisSide.length > 0) {
+                // Find where NON-PICKET bundles end on THIS SIDE ONLY
+                console.log(`Found ${otherBundlesOnThisSide.length} non-picket bundles on ${side} side`);
+                
+                otherBundlesOnThisSide.forEach(bundle => {
+                    const bundleBack = bundle.position.x + bundle.spec.bundleSize.length/2;
+                    if (bundleBack > startX) {
+                        startX = bundleBack;
+                    }
+                });
+                
+                startX = startX + 0.1; // Add small gap
+                console.log(`Non-picket bundles on ${side} side end at x=${(startX - 0.1).toFixed(1)}, starting pickets at x=${startX.toFixed(1)}`);
+            } else {
+                console.log(`No non-picket bundles on ${side} side, starting at front`);
+            }
+            
+            // Calculate X position for this specific picket's stack
+            // Use Math.floor(bundleIndex / 4) to get which row this stack should be in
+            const rowX = startX + spec.bundleSize.length/2 + (Math.floor(bundleIndex / 4) * (spec.bundleSize.length + 0.1));
+            
+            console.log(`Final picket X position: ${rowX.toFixed(1)} on ${side} side`);
+            
+            // Check if we're going off the back of the trailer
+            if (rowX + spec.bundleSize.length/2 > trailerSpec.length/2) {
+                console.log("No more room for pickets");
+                return null;
+            }
+            
+            // Calculate Y position (bottom or top)
+            const posY = 1.0 + spec.bundleSize.height/2 + (level * spec.bundleSize.height);
+            
+            // Height check
+            if (posY + spec.bundleSize.height/2 > trailerSpec.height + 1.0) {
+                console.log("Height limit exceeded");
+                return null;
+            }
+            
+            console.log(`Picket position: x=${rowX.toFixed(1)}, y=${posY.toFixed(1)}, z=${posZ.toFixed(1)}`);
+            return { x: rowX, y: posY, z: posZ };
+        }
+        
+        function calculateLumberPosition(productType, spec, trailerSpec) {
+            console.log(`Calculating ${spec.name} position for productType: ${productType}`);
+            console.log(`Spec details:`, spec);
+            console.log(`Current bundles on trailer:`, bundles.length);
+            console.log(`Bundle types on trailer:`, bundles.map(b => b.type));
+            
+            // Weight check
+            if (totalWeight + spec.weight > trailerSpec.maxWeight) {
+                console.log("Weight limit exceeded");
+                return null;
+            }
+            
+            // Count existing lumber of this specific type ONLY
+            const existingOfType = bundles.filter(b => b.type === productType);
+            console.log(`Existing ${productType}: ${existingOfType.length}`);
+            
+            // Count ALL lumber (both 4x4s and 2x4s) for load balancing
+            const allLumber = bundles.filter(b => b.type === 'rough4x4' || b.type === 'rough2x4');
+            console.log(`Total lumber on trailer: ${allLumber.length}`);
+            
+            // Lumber stacks: left side first (5 high), then right side (5 high)
+            const bundleIndex = existingOfType.length;
+            const maxStackHeight = 5;
+            
+            // Which stack are we on for THIS TYPE?
+            const stackNumber = Math.floor(bundleIndex / maxStackHeight);
+            const level = bundleIndex % maxStackHeight;
+            
+            // LOAD BALANCING: Check how many lumber bundles are on each side
+            const leftLumber = allLumber.filter(b => b.position.z < 0);
+            const rightLumber = allLumber.filter(b => b.position.z > 0);
+            console.log(`Lumber balance: ${leftLumber.length} left, ${rightLumber.length} right`);
+            
+            // Decide which side based on balance (if starting a new stack)
+            let side;
+            if (level === 0) {
+                // Starting a new stack - choose the side with fewer bundles for balance
+                if (leftLumber.length <= rightLumber.length) {
+                    side = 'left';
+                } else {
+                    side = 'right';
+                }
+                console.log(`Starting new stack on ${side} side for balance`);
+            } else {
+                // Continue stacking on same side as previous bundle of this type
+                const prevBundle = existingOfType[bundleIndex - 1];
+                side = prevBundle.position.z < 0 ? 'left' : 'right';
+                console.log(`Continuing stack on ${side} side`);
+            }
+            
+            const posZ = side === 'left' ? -2.125 : 2.125;
+            
+            console.log(`${productType} ${bundleIndex}: stack=${stackNumber}, side=${side}, level=${level}`);
+            
+            // Find where to position this lumber
+            let startX = -trailerSpec.length/2; // Default to front
+            
+            // For the FIRST bundle of this type on each side, position tight against pickets
+            // For subsequent bundles on the same side, stack on existing lumber
+            
+            if (level === 0) {
+                // This is the first bundle of a new stack - find where to position it
+                
+                // Find ALL existing bundles on this side to position after them
+                const bundlesOnThisSide = bundles.filter(b => 
+                    Math.abs(b.position.z - posZ) < 1
+                );
+                
+                console.log(`Found ${bundlesOnThisSide.length} bundles on ${side} side`);
+                
+                if (bundlesOnThisSide.length > 0) {
+                    bundlesOnThisSide.forEach(bundle => {
+                        const bundleBack = bundle.position.x + bundle.spec.bundleSize.length/2;
+                        if (bundleBack > startX) {
+                            startX = bundleBack;
+                        }
+                    });
+                    console.log(`Bundles on ${side} side end at ${startX.toFixed(1)}`);
+                } else {
+                    console.log(`No bundles on ${side} side, starting at front`);
+                }
+                
+                // Check if this is a new row of lumber (stack > 1 means we've already done both sides once)
+                if (stackNumber > 1) {
+                    // Find existing lumber of this type on this side
+                    const existingLumberOnSide = bundles.filter(b => 
+                        b.type === productType && 
+                        Math.abs(b.position.z - posZ) < 1
+                    );
+                    
+                    if (existingLumberOnSide.length > 0) {
+                        let furthestLumber = startX;
+                        existingLumberOnSide.forEach(lumber => {
+                            const lumberBack = lumber.position.x + lumber.spec.bundleSize.length/2;
+                            if (lumberBack > furthestLumber) {
+                                furthestLumber = lumberBack;
+                            }
+                        });
+                        startX = furthestLumber;
+                        console.log(`Existing ${productType} on ${side} side ends at ${startX.toFixed(1)}`);
+                    }
+                }
+                
+                // Position with tiny gap
+                var rowX = startX + 0.1 + spec.bundleSize.length/2;
+                
+            } else {
+                // Stacking on top of existing bundle - use same X position as bundle below
+                const bundleBelow = existingOfType[bundleIndex - 1];
+                if (bundleBelow && bundleBelow.mesh) {
+                    var rowX = bundleBelow.mesh.position.x;
+                    console.log(`Stacking on existing bundle at x=${rowX.toFixed(1)}`);
+                } else {
+                    // Fallback - should not happen
+                    var rowX = startX + 0.1 + spec.bundleSize.length/2;
+                }
+            }
+            
+            console.log(`Final position for ${productType} on ${side} side at x=${rowX.toFixed(1)}`);
+            
+            // Check if this fits on trailer
+            if (rowX + spec.bundleSize.length/2 > trailerSpec.length/2 + 1.0) {
+                console.log("No more room for lumber");
+                return null;
+            }
+            
+            // Calculate Y position (stacking height)
+            const posY = 1.0 + spec.bundleSize.height/2 + (level * (spec.bundleSize.height + 0.05));
+            
+            // Height check
+            if (posY + spec.bundleSize.height/2 > trailerSpec.height + 1.0) {
+                console.log("Height limit exceeded");
+                return null;
+            }
+            
+            console.log(`${productType} position: x=${rowX.toFixed(1)}, y=${posY.toFixed(1)}, z=${posZ.toFixed(1)}`);
+            return { x: rowX, y: posY, z: posZ };
+        }
+        
+        function createGopherWoodBundle(productType, id) {
+            const spec = productSpecs[productType];
+            
+            const geometry = new THREE.BoxGeometry(
+                spec.bundleSize.length,
+                spec.bundleSize.height,
+                spec.bundleSize.width
+            );
+            
+            // White wrapping material
+            const wrapMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+            const bundle = new THREE.Mesh(geometry, wrapMaterial);
+            bundle.castShadow = true;
+            bundle.receiveShadow = true;
+            bundle.userData = { type: productType, id: id };
+            
+            // Add lumber core (slightly smaller, showing through wrap)
+            const lumberGeometry = new THREE.BoxGeometry(
+                spec.bundleSize.length - 0.1,
+                spec.bundleSize.height - 0.1,
+                spec.bundleSize.width - 0.1
+            );
+            const lumberColor = productType === 'dogear' ? 0x8B4513 : 
+                               productType === 'rough2x4' ? 0xDEB887 : 0x654321;
+            const lumberMaterial = new THREE.MeshLambertMaterial({ color: lumberColor });
+            const lumberCore = new THREE.Mesh(lumberGeometry, lumberMaterial);
+            bundle.add(lumberCore);
+            
+            // Red strapping
+            const strapGeometry = new THREE.BoxGeometry(spec.bundleSize.length + 0.05, 0.1, 0.05);
+            const strapMaterial = new THREE.MeshLambertMaterial({ color: 0xFF0000 });
+            
+            const strap1 = new THREE.Mesh(strapGeometry, strapMaterial);
+            strap1.position.y = spec.bundleSize.height/4;
+            bundle.add(strap1);
+            
+            const strap2 = new THREE.Mesh(strapGeometry, strapMaterial);
+            strap2.position.y = -spec.bundleSize.height/4;
+            bundle.add(strap2);
+            
+            // Blue GopherWood logo on top
+            const logoGeometry = new THREE.BoxGeometry(spec.bundleSize.length * 0.8, 0.05, spec.bundleSize.width * 0.6);
+            const logoMaterial = new THREE.MeshLambertMaterial({ color: 0x0066cc });
+            const logo = new THREE.Mesh(logoGeometry, logoMaterial);
+            logo.position.y = spec.bundleSize.height/2 + 0.03;
+            bundle.add(logo);
+            
+            return bundle;
+        }
+        
+        function clearTrailer() {
+            bundles.forEach(bundle => {
+                scene.remove(bundle.mesh);
+            });
+            bundles = [];
+            totalWeight = 0;
+            totalHeight = 0;
+            totalValue = 0;
+            bundleInventory = { 'dogear': 0, 'rough2x4': 0, 'rough4x4': 0 };
+            updateStats();
+            updateBundleInput();
+        }
+        
+        function removeBundles(productType, count) {
+            const bundlesToRemove = bundles.filter(b => b.type === productType).slice(-count);
+            
+            bundlesToRemove.forEach(bundle => {
+                scene.remove(bundle.mesh);
+                const index = bundles.indexOf(bundle);
+                bundles.splice(index, 1);
+                
+                totalWeight -= bundle.spec.weight;
+                totalValue -= bundle.spec.price * bundle.spec.pieces;
+                bundleInventory[productType]--;
+            });
+            
+            totalHeight = 0;
+            bundles.forEach(bundle => {
+                totalHeight = Math.max(totalHeight, bundle.mesh.position.y + bundle.spec.bundleSize.height/2);
+            });
+            
+            updateStats();
+            updateBundleInput();
+        }
+        
+        function updateBundleInput() {
+            const productType = document.getElementById('productType').value;
+            const currentCount = bundleInventory[productType];
+            document.getElementById('bundleCount').value = currentCount;
+            document.getElementById('bundleCount').placeholder = `Currently loaded: ${currentCount}`;
+        }
+        
+        function loadPopularConfig() {
+            clearTrailer();
+            setTimeout(() => {
+                loadBundlesWithAnimation('dogear', 16).then(() => {
+                    return loadBundlesWithAnimation('rough2x4', 16);
+                });
+            }, 100);
+        }
+        
+        function loadOptimalConfig() {
+            clearTrailer();
+            setTimeout(() => {
+                loadBundlesWithAnimation('rough4x4', 10).then(() => {
+                    return loadBundlesWithAnimation('rough2x4', 14);
+                }).then(() => {
+                    return loadBundlesWithAnimation('dogear', 10);
+                });
+            }, 100);
+        }
+        
+        function changeTrailerSize() {
+            const newSize = document.getElementById('trailerSize').value;
+            console.log(`Changing trailer from ${currentTrailerSize}' to ${newSize}'`);
+            currentTrailerSize = newSize;
+            
+            clearTrailer();
+            createFlatbed();
+            updateStats();
+            
+            const spec = trailerSpecs[currentTrailerSize];
+            console.log(`New trailer specs: ${spec.length}' x ${spec.width}' x ${spec.height}'`);
+        }
+        
+        function updateStats() {
+            const trailerSpec = trailerSpecs[currentTrailerSize];
+            
+            const weightPercent = (totalWeight / trailerSpec.maxWeight) * 100;
+            const weightProgress = document.getElementById('weightProgress');
+            const weightText = document.getElementById('weightText');
+            
+            weightProgress.style.width = Math.min(weightPercent, 100) + '%';
+            weightText.textContent = `${totalWeight.toLocaleString()} / ${trailerSpec.maxWeight.toLocaleString()} lbs (${Math.round(weightPercent)}%)`;
+            
+            if (weightPercent < 75) {
+                weightProgress.className = 'progress-fill safe';
+            } else if (weightPercent < 90) {
+                weightProgress.className = 'progress-fill caution';
+            } else {
+                weightProgress.className = 'progress-fill danger';
+            }
+            
+            const heightPercent = (totalHeight / (trailerSpec.height + 1.0)) * 100;
+            const heightProgress = document.getElementById('heightProgress');
+            const heightText = document.getElementById('heightText');
+            
+            heightProgress.style.width = Math.min(heightPercent, 100) + '%';
+            heightText.textContent = `${totalHeight.toFixed(1)} / ${trailerSpec.height} ft (${Math.round(heightPercent)}%)`;
+            
+            if (heightPercent < 75) {
+                heightProgress.className = 'progress-fill safe';
+            } else if (heightPercent < 90) {
+                heightProgress.className = 'progress-fill caution';
+            } else {
+                heightProgress.className = 'progress-fill danger';
+            }
+            
+            document.getElementById('bundleCountDisplay').textContent = bundles.length;
+            document.getElementById('totalValue').textContent = '$' + totalValue.toLocaleString(undefined, { minimumFractionDigits: 2 });
+            
+            const loadStatus = document.getElementById('loadStatus');
+            if (bundles.length === 0) {
+                loadStatus.textContent = 'Ready to Load';
+                loadStatus.style.color = '#32cd32';
+            } else if (weightPercent > 90 || heightPercent > 90) {
+                loadStatus.textContent = 'MAXIMUM CAPACITY';
+                loadStatus.style.color = '#ff4500';
+            } else if (weightPercent > 75 || heightPercent > 75) {
+                loadStatus.textContent = 'Approaching Limit';
+                loadStatus.style.color = '#ffa500';
+            } else {
+                loadStatus.textContent = `Loading Complete`;
+                loadStatus.style.color = '#32cd32';
+            }
+        }
+        
+        function updateTrailerInfo() {
+            const spec = trailerSpecs[currentTrailerSize];
+            document.getElementById('currentTrailer').textContent = 
+                `${spec.length}' x ${spec.width}' Professional Flatbed`;
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
