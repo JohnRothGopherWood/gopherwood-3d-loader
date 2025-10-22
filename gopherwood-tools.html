@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GopherWood Professional Tools</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a4d2e 0%, #228B22 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #228B22 0%, #1a4d2e 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .logo {
+            background: white;
+            color: #228B22;
+            font-size: 3em;
+            font-weight: bold;
+            padding: 20px 40px;
+            border-radius: 15px;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 50px 40px;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 50px;
+            color: #1a4d2e;
+        }
+        
+        .intro h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: #228B22;
+        }
+        
+        .intro p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .tools-grid { grid-template-columns: 1fr; }
+        }
+        
+        .tool-card {
+            background: linear-gradient(135deg, rgba(34, 139, 34, 0.08) 0%, rgba(34, 139, 34, 0.12) 100%);
+            border: 4px solid #228B22;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(34, 139, 34, 0.3);
+            border-color: #1a4d2e;
+        }
+        
+        .tool-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .tool-card h3 {
+            font-size: 1.8em;
+            color: #228B22;
+            margin-bottom: 15px;
+        }
+        
+        .tool-card p {
+            font-size: 1.1em;
+            color: #1a4d2e;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .tool-card .features {
+            text-align: left;
+            margin-bottom: 25px;
+        }
+        
+        .tool-card .features li {
+            margin: 10px 0;
+            color: #2F1B14;
+            font-size: 1em;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #228B22 0%, #1a4d2e 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(34, 139, 34, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(34, 139, 34, 0.4);
+            background: linear-gradient(135deg, #1a4d2e 0%, #228B22 100%);
+        }
+        
+        .features-section {
+            background: rgba(34, 139, 34, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 40px;
+        }
+        
+        .features-section h3 {
+            font-size: 1.8em;
+            color: #228B22;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .features-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .features-list { grid-template-columns: 1fr; }
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #228B22;
+        }
+        
+        .feature-item .icon {
+            font-size: 2em;
+            margin-right: 15px;
+            color: #228B22;
+        }
+        
+        .feature-item .text {
+            flex: 1;
+        }
+        
+        .feature-item h4 {
+            color: #1a4d2e;
+            margin-bottom: 5px;
+        }
+        
+        .feature-item p {
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .footer {
+            background: #1a4d2e;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 1em;
+        }
+        
+        .footer a {
+            color: #90EE90;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">GOPHERWOOD</div>
+            <h1>Professional Tools Suite</h1>
+            <p>Advanced Planning & Pricing Solutions for Lumber Professionals</p>
+        </div>
+        
+        <div class="content">
+            <div class="intro">
+                <h2>🌲 Elevate Your Sales Operation</h2>
+                <p>Two powerful tools designed to streamline your quoting, planning, and logistics. Built by lumber professionals, for lumber professionals.</p>
+            </div>
+            
+            <div class="tools-grid">
+                <div class="tool-card" onclick="window.open('gopherwood-calculator-v2.html', '_blank')">
+                    <div class="tool-icon">🧮</div>
+                    <h3>GopherWood Calculator</h3>
+                    <p>Instant pricing and material calculations</p>
+                    <ul class="features">
+                        <li>✅ Fence calculator (linear feet to materials)</li>
+                        <li>✅ Bundle pricing for all products</li>
+                        <li>✅ Weight & volume tracking</li>
+                        <li>✅ DOT compliance checking</li>
+                        <li>✅ Reseller vs contractor pricing</li>
+                    </ul>
+                    <a href="gopherwood-calculator-v2.html" class="btn" target="_blank">Launch Calculator</a>
+                </div>
+                
+                <div class="tool-card" onclick="window.open('gopherwood-v10.4-beta.html', '_blank')">
+                    <div class="tool-icon">🚛</div>
+                    <h3>3D Trailer Loading System</h3>
+                    <p>Visualize optimal load configurations</p>
+                    <ul class="features">
+                        <li>✅ Interactive 3D trailer visualization</li>
+                        <li>✅ Balanced left-right loading</li>
+                        <li>✅ Real-time weight calculations</li>
+                        <li>✅ Load plan templates</li>
+                        <li>✅ Customer demonstration tool</li>
+                    </ul>
+                    <a href="gopherwood-v10.4-beta.html" class="btn" target="_blank">Launch 3D Loader</a>
+                </div>
+            </div>
+            
+            <div class="features-section">
+                <h3>💎 Why GopherWood Professional Tools?</h3>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="icon">⚡</div>
+                        <div class="text">
+                            <h4>Lightning Fast Quotes</h4>
+                            <p>Quote a complete fence project in under 30 seconds</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="icon">🎯</div>
+                        <div class="text">
+                            <h4>Precision Accuracy</h4>
+                            <p>Calculate weight, volume, and costs to the penny</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="icon">🚚</div>
+                        <div class="text">
+                            <h4>DOT Compliant</h4>
+                            <p>Stay within legal weight and volume limits every time</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="icon">👥</div>
+                        <div class="text">
+                            <h4>Customer Confidence</h4>
+                            <p>Show customers exactly how their load will ship</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="icon">📊</div>
+                        <div class="text">
+                            <h4>Real-Time Visualization</h4>
+                            <p>See loads build in 3D before the forklift starts</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="icon">💼</div>
+                        <div class="text">
+                            <h4>Professional Presentation</h4>
+                            <p>Branded tools that showcase your expertise</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>GopherWood Professional Tools</strong></p>
+            <p>Developed by <a href="https://gopherwood.us" target="_blank">Restorative Industries</a></p>
+            <p style="margin-top: 15px; font-size: 0.9em; opacity: 0.8;">Pre-stained lumber finished on all 6 sides • Eliminates weather delays • Professional quality guaranteed</p>
+        </div>
+    </div>
+</body>
+</html>
